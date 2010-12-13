@@ -52,7 +52,6 @@ class sfWidgetFormDoctrineChoice extends sfWidgetFormChoice
   protected function configure($options = array(), $attributes = array())
   {
     $this->addRequiredOption('model');
-    $this->addOption('add_empty', false);
     $this->addOption('method', '__toString');
     $this->addOption('key_method', 'getPrimaryKey');
     $this->addOption('order_by', null);

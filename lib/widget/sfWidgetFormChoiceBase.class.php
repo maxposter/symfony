@@ -34,6 +34,7 @@ abstract class sfWidgetFormChoiceBase extends sfWidgetForm
   {
     $this->addRequiredOption('choices');
     $this->addOption('translate_choices', true);
+    $this->addOption('add_empty', false);
   }
 
   /**
@@ -48,6 +49,14 @@ abstract class sfWidgetFormChoiceBase extends sfWidgetForm
     if ($choices instanceof sfCallable)
     {
       $choices = $choices->call();
+    }
+    
+    if (false !== $this->getOption('add_empty'))
+    {
+      $choices = sfForm::deepArrayUnion(
+        array(''=>(true === $this->getOption('add_empty') ? '' : $this->getOption('add_empty'))),
+        $choices
+      );
     }
 
     if (!$this->getOption('translate_choices'))

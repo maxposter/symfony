@@ -1322,7 +1322,7 @@ class sfForm implements ArrayAccess, Iterator, Countable
    *
    * @return array The merged array
    */
-  static protected function deepArrayUnion($array1, $array2)
+  static public function deepArrayUnion($array1, $array2)
   {
     foreach ($array2 as $key => $value)
     {
