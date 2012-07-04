@@ -133,7 +133,6 @@ class sfSimpleAutoload
 
       return true;
     }
-
     return false;
   }
 
@@ -286,10 +285,17 @@ class sfSimpleAutoload
       $this->cacheChanged = true;
     }
 
-    preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
+    //preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
+    $fileData = file_get_contents($file);
+    $namespace = '';
+    if (preg_match('/namespace\s+([\w\\\\]+);/i', $fileData, $matches)) {
+      $namespace = $matches[1] . '\\';
+    }
+
+    preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', $fileData, $classes);
     foreach ($classes[1] as $class)
     {
-      $this->classes[strtolower($class)] = $file;
+      $this->classes[strtolower($namespace.$class)] = $file;
     }
   }
 
@@ -326,7 +332,7 @@ class sfSimpleAutoload
    * Loads configuration from the supplied files.
    *
    * @param array $files An array of autoload.yml files
-   * 
+   *
    * @see sfAutoloadConfigHandler
    */
   public function loadConfiguration(array $files)
