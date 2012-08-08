@@ -285,7 +285,6 @@ class sfSimpleAutoload
       $this->cacheChanged = true;
     }
 
-    //preg_match_all('~^\s*(?:abstract\s+|final\s+)?(?:class|interface)\s+(\w+)~mi', file_get_contents($file), $classes);
     $fileData = file_get_contents($file);
     $namespace = '';
     if (preg_match('/namespace\s+([\w\\\\]+);/i', $fileData, $matches)) {
