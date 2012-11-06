@@ -46,7 +46,15 @@ class sfTesterUser extends sfTester
    */
   public function isAttribute($key, $value, $ns = null)
   {
-    $this->tester->is($this->user->getAttribute($key, null, $ns), $value, sprintf('user attribute "%s" is "%s"', $key, $value));
+    $this->tester->is(
+        $this->user->getAttribute($key, null, $ns),
+        $value,
+        sprintf(
+            'user attribute "%s" is "%s"',
+            $key,
+            (is_array($value) ? json_encode($value) : $value)
+        )
+    );
 
     return $this->getObjectToReturn();
   }
