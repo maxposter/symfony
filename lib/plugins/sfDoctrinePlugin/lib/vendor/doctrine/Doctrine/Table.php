@@ -1527,6 +1527,25 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         return $record;
     }
 
+
+    /**
+     * Create a new collection.
+     *
+     * @param  array  $array
+     * @return \Doctrine_Collection
+     */
+    public function createCollection(array $array = array())
+    {
+        $class = $this->getAttribute(\Doctrine_Core::ATTR_COLLECTION_CLASS);
+        $collection = new $class($this->getComponentName());
+        if ($array) {
+            $collection->fromArray($array);
+        }
+
+        return $collection;
+    }
+
+
     /**
      * Adds a named query in the query registry.
      *
