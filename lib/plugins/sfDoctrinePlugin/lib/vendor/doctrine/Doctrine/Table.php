@@ -1402,6 +1402,10 @@ class Doctrine_Table extends Doctrine_Configurable implements Countable
         if (isset($options['default'])) {
             $this->hasDefaultValues = true;
         }
+
+        // Dirty fix to recount columns
+        // So that actAs/Templates can be added here
+        $this->columnCount = count($this->_columns);
     }
 
     /**
