@@ -287,7 +287,7 @@ class sfSimpleAutoload
 
     $fileData = file_get_contents($file);
     $namespace = '';
-    if (preg_match('/namespace\s+([\w\\\\]+);/i', $fileData, $matches)) {
+    if (preg_match('/\s*namespace\s*((?:\w+(?:\\\\\w+)*))(?:\r|\n|\s)*(?:;|{)/i', $fileData, $matches)) {
       $namespace = $matches[1] . '\\';
     }
 
