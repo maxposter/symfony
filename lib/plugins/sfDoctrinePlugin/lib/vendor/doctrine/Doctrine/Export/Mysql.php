@@ -282,7 +282,10 @@ class Doctrine_Export_Mysql extends Doctrine_Export
 
         $method = 'get' . $field['type'] . 'Declaration';
 
-        $after = !empty($field['after']) ? ' AFTER ' . $field['after'] : '';
+        $after = '';
+        if (!empty($field['after'])) {
+            $after = true !== $field['after'] ? ' AFTER ' . $field['after'] : ' FIRST ';
+        }
 
         try {
             if (method_exists($this->conn->dataDict, $method)) {
