@@ -195,6 +195,17 @@ class sfValidatorDate extends sfValidatorBase
       return $this->getEmptyValue();
     }
 
+    // Такой вот dirty fix, т.е. всё что меньше 41 это 2000+ год, в 41 году поправим :)
+    if (41 > intval($value['year'])) {
+        $y2k = new DateTime('2000-01-01');
+        $y2k->modify(sprintf('+%d year', $value['year']));
+        $value['year'] = $y2k->format('Y');
+    } else {
+        $y2k = new DateTime('1900-01-01');
+        $y2k->modify(sprintf('+%d year', $value['year']));
+        $value['year'] = $y2k->format('Y');
+    }
+
     if (!checkdate(intval($value['month']), intval($value['day']), intval($value['year'])))
     {
       throw new sfValidatorError($this, 'invalid', array('value' => $value));
