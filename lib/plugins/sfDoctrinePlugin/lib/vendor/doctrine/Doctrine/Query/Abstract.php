@@ -1149,7 +1149,14 @@ abstract class Doctrine_Query_Abstract
         $copy->free();
 
         if ($componentsBefore !== $componentsAfter) {
-            return array_diff_assoc($componentsAfter, $componentsBefore);
+            // https://github.com/doctrine/doctrine1/pull/50
+            $toRet = array();
+            foreach ($componentsAfter as $key => $component) {
+                if (!array_key_exists($key, $componentsBefore) || ($component != $componentsBefore[$key])) {
+                    $toRet[$key] = $component;
+                }
+            }
+            return $toRet;
         } else {
             return $componentsAfter;
         }
