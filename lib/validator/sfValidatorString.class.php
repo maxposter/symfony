@@ -43,6 +43,7 @@ class sfValidatorString extends sfValidatorBase
 
     $this->addOption('max_length');
     $this->addOption('min_length');
+    $this->addOption('validate_encoding', true);
 
     $this->setOption('empty_value', '');
   }
@@ -53,6 +54,33 @@ class sfValidatorString extends sfValidatorBase
   protected function doClean($value)
   {
     $clean = (string) $value;
+
+    if ($this->getOption('validate_encoding')) {
+        if (!mb_check_encoding($clean, mb_strtoupper($this->getCharset()))) {
+            throw new sfValidatorError($this, 'invalid', array('value' => $value));
+        }
+        // Cleaning
+        // @see http://webcollab.sourceforge.net/unicode.html
+        /*
+        if (mb_strtoupper($this->getCharset()) == mb_internal_encoding()) {
+            $clean = preg_replace(
+                '/[\x00-\x08\x10\x0B\x0C\x0E-\x19\x7F]'
+                . '|(?<=^|[\x00-\x7F])[\x80-\xBF]+'
+                . '|([\xC0\xC1]|[\xF0-\xFF])[\x80-\xBF]*'
+                . '|[\xC2-\xDF]((?![\x80-\xBF])|[\x80-\xBF]{2,})'
+                . '|[\xE0-\xEF](([\x80-\xBF](?![\x80-\xBF]))|(?![\x80-\xBF]{2})|[\x80-\xBF]{3,})/',
+                '�',
+                $clean
+            );
+            $clean = preg_replace(
+                '/\xE0[\x80-\x9F][\x80-\xBF]'
+                . '|\xED[\xA0-\xBF][\x80-\xBF]/S',
+                '?',
+                $clean
+            );
+        }
+        */
+    }
 
     $length = function_exists('mb_strlen') ? mb_strlen($clean, $this->getCharset()) : strlen($clean);
 
