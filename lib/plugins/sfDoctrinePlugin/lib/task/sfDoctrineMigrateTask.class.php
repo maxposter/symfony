@@ -113,7 +113,7 @@ EOF;
       {
         for($i = (int)$from + 1; $i <= (int)$version; $i++)
         {
-          $this->logSection('doctrine', 'executing migration : '.$i.', class: '.$migration_classes[$i]);
+          $this->logSection('doctrine', 'executing migration : '.$i.(!empty($migration_classes[$i]) ? ', class: '.$migration_classes[$i] : ''));
           $migration->migrate($i, $options['dry-run']);
         }
       }
