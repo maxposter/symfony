@@ -680,18 +680,43 @@ class lime_output
     }
   }
 
-  public function echoln($message, $colorizer_parameter = null, $colorize = true)
-  {
-    if ($colorize)
+    public function echoln($message, $colorizer_parameter = null, $colorize = true)
     {
-      $message = preg_replace('/(?:^|\.)((?:not ok|dubious|errors) *\d*)\b/e', '$this->colorizer->colorize(\'$1\', \'ERROR\')', $message);
-      $message = preg_replace('/(?:^|\.)(ok *\d*)\b/e', '$this->colorizer->colorize(\'$1\', \'INFO\')', $message);
-      $message = preg_replace('/"(.+?)"/e', '$this->colorizer->colorize(\'$1\', \'PARAMETER\')', $message);
-      $message = preg_replace('/(\->|\:\:)?([a-zA-Z0-9_]+?)\(\)/e', '$this->colorizer->colorize(\'$1$2()\', \'PARAMETER\')', $message);
-    }
+        if ($colorize)
+        {
+            $colorizer = $this->colorizer;
+            $message = preg_replace_callback(
+                '/(?:^|\.)((?:not ok|dubious|errors) *\d*)\b/',
+                function ($match) use ($colorizer) {
+                    return $colorizer->colorize($match[1], 'ERROR');
+                },
+                $message
+            );
+            $message = preg_replace_callback(
+                '/(?:^|\.)(ok *\d*)\b/',
+                function ($match) use ($colorizer) {
+                    return $colorizer->colorize($match[1], 'INFO');
+                },
+                $message
+            );
+            $message = preg_replace_callback(
+                '/"(.+?)"/',
+                function ($match) use ($colorizer) {
+                    return $colorizer->colorize($match[1], 'PARAMETER');
+                },
+                $message
+            );
+            $message = preg_replace_callback(
+                '/(\->|\:\:)?([a-zA-Z0-9_]+?)\(\)/',
+                function ($match) use ($colorizer) {
+                    return $colorizer->colorize($match[1].$match[2], 'PARAMETER');
+                },
+                $message
+            );
+        }
 
-    echo ($colorizer_parameter ? $this->colorizer->colorize($message, $colorizer_parameter) : $message)."\n";
-  }
+        echo ($colorizer_parameter ? $this->colorizer->colorize($message, $colorizer_parameter) : $message)."\n";
+    }
 
   public function green_bar($message)
   {
