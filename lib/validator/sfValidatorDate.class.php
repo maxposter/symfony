@@ -200,7 +200,7 @@ class sfValidatorDate extends sfValidatorBase
         $y2k = new DateTime('2000-01-01');
         $y2k->modify(sprintf('+%d year', $value['year']));
         $value['year'] = $y2k->format('Y');
-    } else {
+    } elseif (2 >= strlen(intval($value['year']))) {
         $y2k = new DateTime('1900-01-01');
         $y2k->modify(sprintf('+%d year', $value['year']));
         $value['year'] = $y2k->format('Y');
