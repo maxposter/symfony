@@ -159,12 +159,12 @@ class sfDomCssSelector implements Countable, Iterator
         }
 
         // Code to deal with attribute selectors
-        if (preg_match('/^(\w+|\*)(\[.+\])$/', $token, $matches))
+        if (preg_match('/^([-_\w]+|\*)(\[.+\])$/', $token, $matches))
         {
           $tagName = $matches[1] ? $matches[1] : '*';
           preg_match_all('/
             \[
-              ([\w\-]+)             # attribute
+              ([\w\-_]+)            # attribute
               ([=~\|\^\$\*]?)       # modifier (optional)
               =?                    # equal (optional)
               (
