@@ -499,6 +499,10 @@ class Doctrine_DataDict_Mysql extends Doctrine_DataDict
             $default = ' DEFAULT ' . (is_null($field['default'])
                 ? 'NULL'
                 : $this->conn->quote($field['default']));
+
+            if (array_key_exists('default', $field) && array_key_exists('notnull', $field) && (true === $field['notnull']) && (null === $field['default'])) {
+                $default = '';
+            }
         }
 
         $notnull  = (isset($field['notnull'])  && $field['notnull'])  ? ' NOT NULL' : '';

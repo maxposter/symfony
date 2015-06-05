@@ -495,6 +495,10 @@ class Doctrine_Export_Mssql extends Doctrine_Export
     {
         $default = '';
 
+        if (array_key_exists('default', $field) && array_key_exists('notnull', $field) && (true === $field['notnull']) && (null === $field['default'])) {
+            return $default;
+        }
+
         if (array_key_exists('default', $field)) {
             if ($field['default'] === '') {
                 $field['default'] = empty($field['notnull'])

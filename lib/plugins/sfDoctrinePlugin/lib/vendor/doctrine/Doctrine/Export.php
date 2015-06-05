@@ -762,6 +762,10 @@ class Doctrine_Export extends Doctrine_Connection_Module
     {
         $default = '';
 
+        if (array_key_exists('default', $field) && array_key_exists('notnull', $field) && (true === $field['notnull']) && (null === $field['default'])) {
+            return $default;
+        }
+
         if (array_key_exists('default', $field)) {
             if ($field['default'] === '') {
                 $field['default'] = empty($field['notnull'])
