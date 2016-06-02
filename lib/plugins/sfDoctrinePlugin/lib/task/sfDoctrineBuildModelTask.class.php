@@ -86,7 +86,9 @@ EOF;
         }
 
         $typePad = max(array_map('strlen', array_merge(array_values($properties), array($model))));
-        $namePad = max(array_map('strlen', array_keys(array_map(array('sfInflector', 'camelize'), $properties))));
+        $namePad = max(array_map(function ($name) {
+          return strlen(sfInflector::camelize($name)) * 2 + 4;
+        }, array_keys($properties)));
         $setters = array();
         $getters = array();
 
@@ -94,9 +96,18 @@ EOF;
         {
           $camelized = sfInflector::camelize($name);
           $collection = 'Doctrine_Collection' == $type;
+          switch ($type) {
+            case 'integer':
+            case 'timestamp':
+              $type = 'int';
+              break;
+            case 'enum':
+              $type = 'string';
+              break;
+          }
 
-          $getters[] = sprintf('@method %-'.$typePad.'s %s%-'.($namePad + 2).'s Returns the current record\'s "%s" %s', $type, 'get', $camelized.'()', $name, $collection ? 'collection' : 'value');
-          $setters[] = sprintf('@method %-'.$typePad.'s %s%-'.($namePad + 2).'s Sets the current record\'s "%s" %s', $model, 'set', $camelized.'()', $name, $collection ? 'collection' : 'value');
+          $getters[] = sprintf('@method %-'.$typePad.'s %s%-'.($namePad).'s Returns the current record\'s "%s" %s', $type, 'get', $camelized.'()', $name, $collection ? 'collection' : 'value');
+          $setters[] = sprintf('@method %-'.$typePad.'s %s%-'.($namePad).'s Sets the current record\'s "%s" %s', $model, 'set', $camelized.'($'.lcfirst($camelized).')', $name, $collection ? 'collection' : 'value');
         }
 
         // use the last match as a search string
