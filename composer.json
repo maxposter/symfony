@@ -1,6 +1,6 @@
 {
     "name": "maxposter/symfony1",
-    "type": "maxposter-symfony1",
+    "type": "symfony1-plugin",
     "require": {
         "composer/installers": "^1.0"
     }
